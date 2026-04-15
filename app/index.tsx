@@ -1,10 +1,10 @@
 import { View, StyleSheet } from "react-native";
 import { useState } from "react";
 
-import CityHeader from "../components/ui/ciudad_header";
-import DayNavigator from "../components/ui/dia_nav";
-import WeatherMainInfo from "../components/ui/weath_main_info";
-import WeatherDetails from "../components/ui/weather_details";
+import CityHeader from "@/components/ui/ciudad_header";
+import DayNavigator from "@/components/ui/dia_nav";
+import WeatherMainInfo from "@/components/ui/weath_main_info";
+import WeatherDetails from "@/components/ui/weather_details";
 
 export default function Home() {
   const weatherData = [
@@ -30,11 +30,11 @@ export default function Home() {
     },
     {
       day: "Miércoles",
-      temp: 18,
-      min: 14,
+      temp: 22,
+      min: 19,
       max: 22,
-      humidity: 70,
-      pressure: 1008,
+      humidity: 89,
+      pressure: 1013,
       wind: 20,
       icon: "🌧️",
     },
