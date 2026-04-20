@@ -1,17 +1,25 @@
-import { Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 export default function CityHeader() {
   return (
-    <Text testID="city-name" style={styles.city}>
-      Buenos Aires
-    </Text>
+    <View style={styles.container}>
+      <Text style={styles.cityText}>BUENOS AIRES</Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  city: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
+  container: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 5,
+  },
+  cityText: {
+    color: '#000000',
+    fontSize: 28,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    textAlign: 'center',
   },
 });
