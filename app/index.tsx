@@ -1,65 +1,130 @@
 import { View, StyleSheet, SafeAreaView, Text, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Rect, Circle, Path } from 'react-native-svg';
 
 import CityHeader from '@/components/ui/ciudad_header';
 import WeatherDetails from '@/components/ui/weather_details';
 
-// Icono replicado exactamente de la imagen (estilo Zen/Yin-Yang)
-const CloudIcon = ({ size = 180, color = '#000' }) => (
+const CloudIcon = ({ size = 200, color = '#000' }) => {
+  const strokeWidth = 10;
+
+  return (
+    <Svg width={size} height={size} viewBox="0 0 120 120">
+      
+      {}
+      <Path
+        d="M25 65 A25 25 0 0 1 55 40"
+        fill="none"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+      />
+
+      {}
+      <Path
+        d="M55 40 A20 20 0 0 1 85 55"
+        fill="none"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+      />
+
+      {}
+      <Path
+        d="M85 55 A15 15 0 0 1 95 65"
+        fill="none"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+      />
+
+      {}
+      <Path
+        d="M95 65 A20 20 0 0 1 70 75"
+        fill="none"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+      />
+
+      {}
+      <Path
+        d="M45 75 A20 20 0 0 1 25 65"
+        fill="none"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+      />
+
+    </Svg>
+  );
+};
+
+const SunIcon = ({ size = 200, color = '#000' }) => (
   <Svg width={size} height={size} viewBox="0 0 100 100">
-    {/* Arco Superior */}
-    <Path
-      d="M 20,50 A 15,15 0 0 1 50,50 A 10,10 0 0 1 75,50"
-      stroke={color}
-      strokeWidth={8}
-      strokeLinecap="round"
-      fill="none"
-    />
-    {/* Arco Inferior invertido */}
-    <Path
-      d="M 30,55 A 15,15 0 0 0 60,55 A 10,10 0 0 0 85,55"
-      stroke={color}
-      strokeWidth={8}
-      strokeLinecap="round"
-      fill="none"
+    <Circle 
+      cx="50" 
+      cy="50" 
+      r="38" 
+      stroke={color} 
+      strokeWidth="10" 
+      fill="none" 
     />
   </Svg>
 );
 
+const RainIcon = ({ size = 200, color = '#000' }) => {
+  const strokeWidth = 10;
+  const spacing = 25;
+
+  return (
+    <Svg width={size} height={size} viewBox="0 0 75 125.5">
+      <Rect x={10} y={60} width={strokeWidth} height={30} fill={color} transform="skewX(-20)" />
+      <Rect x={10 + spacing} y={20} width={strokeWidth} height={80} fill={color} transform="skewX(-20)" />
+      <Rect x={10 + spacing * 2} y={40} width={strokeWidth} height={85} fill={color} transform="skewX(-20)" />
+      <Rect x={10 + spacing * 3} y={20} width={strokeWidth} height={62} fill={color} transform="skewX(-20)" />
+      <Rect x={10 + spacing * 4} y={70} width={strokeWidth} height={35} fill={color} transform="skewX(-20)" />
+    </Svg>
+  );
+};
+
 export default function Home() {
-  // Datos actualizados según la imagen (Tokyo, 16°, etc.)
-  const [dayIndex, setDayIndex] = useState(1); // Iniciamos en 4/22
-  
+  const [dayIndex, setDayIndex] = useState(1);
+
   const weatherData = [
-    { id: 1, date: '4/19', temp: 21, humidity: 78, pressure: 1056, wind: 2.3, icon: 'cloud' },
-    { id: 2, date: '4/20', temp: 16, humidity: 78, pressure: 1056, wind: 2.3, icon: 'cloud' },
-    { id: 3, date: '4/21', temp: 21, humidity: 78, pressure: 1010, wind: 2.4, icon: 'cloud' },
+    { id: 1, date: '4/20', temp: 15, humidity: 95, pressure: 1008, wind: 5.2, icon: 'yesterday-cloud' }, // Ayer
+    { id: 2, date: '4/21', temp: 16, humidity: 80, pressure: 1016, wind: 19, icon: 'rain' }, // Hoy
+    { id: 3, date: '4/22', temp: 19, humidity: 88, pressure: 1020, wind: 25, icon: 'sun' }, // Mañana
   ];
 
   const current = weatherData[dayIndex];
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      {/* Header con fechas y Ciudad */}
       <View style={styles.headerSection}>
         <View style={styles.dateSelector}>
-          <TouchableOpacity onPress={() => dayIndex > 0 && setDayIndex(dayIndex - 1)}>
-            <Text style={styles.dateInactive}>{weatherData[0].date}</Text>
-          </TouchableOpacity>
-          <Text style={styles.dateActive}>{current.date}</Text>
-          <TouchableOpacity onPress={() => dayIndex < 2 && setDayIndex(dayIndex + 1)}>
-            <Text style={styles.dateInactive}>{weatherData[2].date}</Text>
-          </TouchableOpacity>
+          {weatherData.map((data, index) => (
+            <TouchableOpacity key={data.id} onPress={() => setDayIndex(index)}>
+              <Text style={dayIndex === index ? styles.dateActive : styles.dateInactive}>
+                {data.date}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
         <Text style={styles.cityTitle}>BUENOS AIRES</Text>
       </View>
 
-      {/* Sección Central: Icono y Detalles */}
       <View style={styles.middleSection}>
         <View style={styles.iconWrapper}>
-          <CloudIcon size={200} />
+          {}
+          {current.icon === 'sun' ? (
+            <SunIcon size={200} />
+          ) : current.icon === 'yesterday-cloud' ? (
+            <CloudIcon size={200} />
+          ) : (
+            <RainIcon size={220} />
+          )}
         </View>
 
         <View style={styles.detailsWrapper}>
@@ -71,23 +136,21 @@ export default function Home() {
         </View>
       </View>
 
-      {/* Sección Inferior: Timeline de temperatura */}
       <View style={styles.bottomSection}>
         <View style={styles.tempRow}>
-          <Text style={styles.tempSmall}>15°</Text>
-          <Text style={styles.tempSmall}>19°</Text>
+          <Text style={styles.tempSmall}>{current.temp - 4}°</Text>
+          <Text style={styles.tempSmall}>{current.temp - 2}°</Text>
           <Text style={styles.tempMain}>{current.temp}°</Text>
-          <Text style={styles.tempSmall}>21°</Text>
-          <Text style={styles.tempSmall}>20°</Text>
+          <Text style={styles.tempSmall}>{current.temp + 2}°</Text>
+          <Text style={styles.tempSmall}>{current.temp + 1}°</Text>
         </View>
-        
-        {/* Línea de tiempo "NOW" */}
+
         <View style={styles.timelineContainer}>
           <View style={styles.line} />
           <Text style={styles.nowLabel}>NOW</Text>
           <View style={styles.line} />
         </View>
-        
+
         <View style={styles.timeRow}>
           <Text style={styles.timeText}>12</Text>
           <Text style={styles.timeText}>15</Text>
@@ -137,7 +200,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconWrapper: {
-    marginBottom: 40,
+    height: 250,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   detailsWrapper: {
     alignSelf: 'flex-start',
