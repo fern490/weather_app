@@ -6,13 +6,16 @@ import Svg, { Rect, Circle, Path } from 'react-native-svg';
 import CityHeader from '@/components/ui/ciudad_header';
 import WeatherDetails from '@/components/ui/weather_details';
 
+const SunIcon = ({ size = 200, color = '#000' }) => (
+  <Svg width={size} height={size} viewBox="0 0 100 100">
+    <Circle cx="50" cy="50" r="38" stroke={color} strokeWidth="10" fill="none" />
+  </Svg>
+);
+
 const CloudIcon = ({ size = 200, color = '#000' }) => {
   const strokeWidth = 10;
-
   return (
     <Svg width={size} height={size} viewBox="0 0 120 120">
-      
-      {}
       <Path
         d="M25 65 A25 25 0 0 1 55 40"
         fill="none"
@@ -20,8 +23,6 @@ const CloudIcon = ({ size = 200, color = '#000' }) => {
         strokeWidth={strokeWidth}
         strokeLinecap="round"
       />
-
-      {}
       <Path
         d="M55 40 A20 20 0 0 1 85 55"
         fill="none"
@@ -29,62 +30,62 @@ const CloudIcon = ({ size = 200, color = '#000' }) => {
         strokeWidth={strokeWidth}
         strokeLinecap="round"
       />
-
-      {}
       <Path
-        d="M85 55 A15 15 0 0 1 95 65"
+        d="M25 65 A25 25 0 0 0 55 90"
         fill="none"
         stroke={color}
         strokeWidth={strokeWidth}
         strokeLinecap="round"
       />
-
-      {}
       <Path
-        d="M95 65 A20 20 0 0 1 70 75"
+        d="M55 90 A20 20 0 0 0 85 75"
         fill="none"
         stroke={color}
         strokeWidth={strokeWidth}
         strokeLinecap="round"
       />
-
-      {}
-      <Path
-        d="M45 75 A20 20 0 0 1 25 65"
-        fill="none"
-        stroke={color}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-      />
-
     </Svg>
   );
 };
 
-const SunIcon = ({ size = 200, color = '#000' }) => (
-  <Svg width={size} height={size} viewBox="0 0 100 100">
-    <Circle 
-      cx="50" 
-      cy="50" 
-      r="38" 
-      stroke={color} 
-      strokeWidth="10" 
-      fill="none" 
-    />
-  </Svg>
-);
-
 const RainIcon = ({ size = 200, color = '#000' }) => {
   const strokeWidth = 10;
   const spacing = 25;
-
   return (
     <Svg width={size} height={size} viewBox="0 0 75 125.5">
       <Rect x={10} y={60} width={strokeWidth} height={30} fill={color} transform="skewX(-20)" />
-      <Rect x={10 + spacing} y={20} width={strokeWidth} height={80} fill={color} transform="skewX(-20)" />
-      <Rect x={10 + spacing * 2} y={40} width={strokeWidth} height={85} fill={color} transform="skewX(-20)" />
-      <Rect x={10 + spacing * 3} y={20} width={strokeWidth} height={62} fill={color} transform="skewX(-20)" />
-      <Rect x={10 + spacing * 4} y={70} width={strokeWidth} height={35} fill={color} transform="skewX(-20)" />
+      <Rect
+        x={10 + spacing}
+        y={20}
+        width={strokeWidth}
+        height={80}
+        fill={color}
+        transform="skewX(-20)"
+      />
+      <Rect
+        x={10 + spacing * 2}
+        y={40}
+        width={strokeWidth}
+        height={85}
+        fill={color}
+        transform="skewX(-20)"
+      />
+      <Rect
+        x={10 + spacing * 3}
+        y={20}
+        width={strokeWidth}
+        height={62}
+        fill={color}
+        transform="skewX(-20)"
+      />
+      <Rect
+        x={10 + spacing * 4}
+        y={70}
+        width={strokeWidth}
+        height={35}
+        fill={color}
+        transform="skewX(-20)"
+      />
     </Svg>
   );
 };
@@ -93,9 +94,9 @@ export default function Home() {
   const [dayIndex, setDayIndex] = useState(1);
 
   const weatherData = [
-    { id: 1, date: '4/20', temp: 15, humidity: 95, pressure: 1008, wind: 5.2, icon: 'yesterday-cloud' }, // Ayer
-    { id: 2, date: '4/21', temp: 16, humidity: 80, pressure: 1016, wind: 19, icon: 'rain' }, // Hoy
-    { id: 3, date: '4/22', temp: 19, humidity: 88, pressure: 1020, wind: 25, icon: 'sun' }, // Mañana
+    { id: 1, date: '4/20', temp: 15, humidity: 95, pressure: 1008, wind: 5.2, icon: 'cloud' },
+    { id: 2, date: '4/21', temp: 16, humidity: 80, pressure: 1016, wind: 19, icon: 'rain' },
+    { id: 3, date: '4/22', temp: 19, humidity: 69, pressure: 1017, wind: 15, icon: 'sun' },
   ];
 
   const current = weatherData[dayIndex];
@@ -103,6 +104,7 @@ export default function Home() {
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.headerSection}>
+        {}
         <View style={styles.dateSelector}>
           {weatherData.map((data, index) => (
             <TouchableOpacity key={data.id} onPress={() => setDayIndex(index)}>
@@ -117,10 +119,9 @@ export default function Home() {
 
       <View style={styles.middleSection}>
         <View style={styles.iconWrapper}>
-          {}
           {current.icon === 'sun' ? (
             <SunIcon size={200} />
-          ) : current.icon === 'yesterday-cloud' ? (
+          ) : current.icon === 'cloud' ? (
             <CloudIcon size={200} />
           ) : (
             <RainIcon size={220} />
@@ -136,19 +137,24 @@ export default function Home() {
         </View>
       </View>
 
+      {}
       <View style={styles.bottomSection}>
-        <View style={styles.tempRow}>
-          <Text style={styles.tempSmall}>{current.temp - 4}°</Text>
-          <Text style={styles.tempSmall}>{current.temp - 2}°</Text>
-          <Text style={styles.tempMain}>{current.temp}°</Text>
-          <Text style={styles.tempSmall}>{current.temp + 2}°</Text>
-          <Text style={styles.tempSmall}>{current.temp + 1}°</Text>
-        </View>
+        <View style={styles.tempTimelineWrapper}>
+          {/* Línea */}
+          <View style={styles.timelineContainer}>
+            <View style={styles.line} />
+            <Text style={styles.nowLabel}>NOW</Text>
+            <View style={styles.line} />
+          </View>
 
-        <View style={styles.timelineContainer}>
-          <View style={styles.line} />
-          <Text style={styles.nowLabel}>NOW</Text>
-          <View style={styles.line} />
+          {/* Temperaturas SUPERPUESTAS */}
+          <View style={styles.tempRow}>
+            <Text style={styles.tempSmall}>{current.temp - 4}°</Text>
+            <Text style={styles.tempSmall}>{current.temp - 2}°</Text>
+            <Text style={styles.tempMain}>{current.temp}°</Text>
+            <Text style={styles.tempSmall}>{current.temp + 2}°</Text>
+            <Text style={styles.tempSmall}>{current.temp + 1}°</Text>
+          </View>
         </View>
 
         <View style={styles.timeRow}>
@@ -168,16 +174,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 20,
+    justifyContent: 'space-between',
   },
   headerSection: {
     alignItems: 'center',
     marginTop: 20,
+    width: '100%',
   },
   dateSelector: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 30,
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 10,
     marginBottom: 40,
   },
   dateActive: {
@@ -200,61 +209,79 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconWrapper: {
-    height: 250,
+    height: 220,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   detailsWrapper: {
     alignSelf: 'flex-start',
     paddingLeft: 40,
+    marginBottom: 20,
   },
   bottomSection: {
-    marginBottom: 50,
+    marginBottom: 10,
     alignItems: 'center',
+    width: '100%',
   },
   tempRow: {
+    position: 'absolute',
+    top: -90, // 👈 ajustá fino si querés (ej: -5 o 5)
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    gap: 25,
+    gap: 20,
   },
   tempMain: {
-    fontSize: 64,
+    fontSize: 72,
     fontWeight: 'bold',
     color: '#000',
+    backgroundColor: '#FFF',
+    paddingHorizontal: 6,
   },
   tempSmall: {
     fontSize: 22,
     fontWeight: '500',
     color: '#000',
+    opacity: 0.6,
+    backgroundColor: '#FFF',
+    paddingHorizontal: 4,
   },
   timelineContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     width: '90%',
-    marginVertical: 10,
+    marginTop: 10,
   },
   line: {
     flex: 1,
-    height: 1,
-    backgroundColor: '#000',
+    height: 1.5,
+    backgroundColor: '#CFCFCF',
   },
   nowLabel: {
     marginHorizontal: 10,
     fontSize: 12,
     fontWeight: 'bold',
     letterSpacing: 1,
+    color: '#000000',
   },
   timeRow: {
     flexDirection: 'row',
     justifyContent: 'center',
     width: '100%',
-    gap: 35,
+    gap: 40,
+    zIndex: 2,
   },
   timeText: {
     fontSize: 14,
     color: '#AAA',
+  },
+  tempTimelineWrapper: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    marginBottom: 10,
   },
 });
