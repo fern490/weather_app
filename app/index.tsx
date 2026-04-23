@@ -92,6 +92,7 @@ const RainIcon = ({ size = 200, color = '#000' }) => {
 
 export default function Home() {
   const [dayIndex, setDayIndex] = useState(1);
+  const icon_size = 250;
 
   const weatherData = [
     { id: 1, date: '4/20', temp: 15, humidity: 95, pressure: 1008, wind: 5.2, icon: 'cloud' },
@@ -120,11 +121,11 @@ export default function Home() {
       <View style={styles.middleSection}>
         <View style={styles.iconWrapper}>
           {current.icon === 'sun' ? (
-            <SunIcon size={200} />
+            <SunIcon size={icon_size} />
           ) : current.icon === 'cloud' ? (
-            <CloudIcon size={200} />
+            <CloudIcon size={icon_size} />
           ) : (
-            <RainIcon size={220} />
+            <RainIcon size={icon_size} />
           )}
         </View>
 
@@ -139,30 +140,35 @@ export default function Home() {
 
       {}
       <View style={styles.bottomSection}>
-        <View style={styles.tempTimelineWrapper}>
-          {/* Línea */}
-          <View style={styles.timelineContainer}>
-            <View style={styles.line} />
-            <Text style={styles.nowLabel}>NOW</Text>
-            <View style={styles.line} />
-          </View>
-
-          {/* Temperaturas SUPERPUESTAS */}
-          <View style={styles.tempRow}>
-            <Text style={styles.tempSmall}>{current.temp - 4}°</Text>
-            <Text style={styles.tempSmall}>{current.temp - 2}°</Text>
-            <Text style={styles.tempMain}>{current.temp}°</Text>
-            <Text style={styles.tempSmall}>{current.temp + 2}°</Text>
-            <Text style={styles.tempSmall}>{current.temp + 1}°</Text>
-          </View>
+        {}
+        <View style={styles.tempRow}>
+          <Text style={styles.tempSmall}>{current.temp - 4}°</Text>
+          <Text style={styles.tempSmall}>{current.temp - 2}°</Text>
+          {}
+          <Text style={styles.tempMain}>{current.temp}°</Text>
+          <Text style={styles.tempSmall}>{current.temp + 2}°</Text>
+          <Text style={styles.tempSmall}>{current.temp + 1}°</Text>
         </View>
 
-        <View style={styles.timeRow}>
-          <Text style={styles.timeText}>12</Text>
-          <Text style={styles.timeText}>15</Text>
-          <View style={{ width: 40 }} />
-          <Text style={styles.timeText}>21</Text>
-          <Text style={styles.timeText}>24</Text>
+        {}
+        <View style={styles.timelineWrapper}>
+          <View style={styles.lineBackground} />
+
+          {}
+          <View style={[styles.cut, { left: '10%' }]} />
+          <View style={[styles.cut, { left: '0%' }]} />
+          <View style={[styles.cut, { left: '70%' }]} />
+          <View style={[styles.cut, { left: '0%' }]} />
+
+          <View style={styles.timeRow}>
+            <Text style={styles.timeText}>12</Text>
+            <Text style={styles.timeText}>15</Text>
+            <View style={styles.nowContainer}>
+              <Text style={styles.nowLabel}>NOW</Text>
+            </View>
+            <Text style={styles.timeText}>21</Text>
+            <Text style={styles.timeText}>24</Text>
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -178,8 +184,9 @@ const styles = StyleSheet.create({
   },
   headerSection: {
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 44,
     width: '100%',
+    paddingBottom: 135,
   },
   dateSelector: {
     flexDirection: 'row',
@@ -187,7 +194,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: 10,
-    marginBottom: 40,
+    marginBottom: 83,
   },
   dateActive: {
     fontSize: 18,
@@ -207,6 +214,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: -106,
   },
   iconWrapper: {
     height: 220,
@@ -216,37 +224,34 @@ const styles = StyleSheet.create({
   },
   detailsWrapper: {
     alignSelf: 'flex-start',
-    paddingLeft: 40,
+    paddingLeft: 17,
     marginBottom: 20,
+    marginTop: 35,
   },
   bottomSection: {
-    marginBottom: 10,
+    marginBottom: 65,
     alignItems: 'center',
     width: '100%',
   },
   tempRow: {
-    position: 'absolute',
-    top: -90, // 👈 ajustá fino si querés (ej: -5 o 5)
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
     width: '100%',
-    gap: 20,
+    paddingHorizontal: 5,
+    marginBottom: 10,
+    zIndex: 2,
   },
   tempMain: {
     fontSize: 72,
     fontWeight: 'bold',
     color: '#000',
-    backgroundColor: '#FFF',
-    paddingHorizontal: 6,
   },
   tempSmall: {
     fontSize: 22,
     fontWeight: '500',
-    color: '#000',
-    opacity: 0.6,
-    backgroundColor: '#FFF',
-    paddingHorizontal: 4,
+    color: '#000000',
+    opacity: 50,
   },
   timelineContainer: {
     flexDirection: 'row',
@@ -283,5 +288,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'relative',
     marginBottom: 10,
+  },
+  timelineWrapper: {
+    width: '100%',
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  lineBackground: {
+    position: 'absolute',
+    width: '100%',
+    height: 1.5,
+    backgroundColor: '#CFCFCF',
+  },
+  nowContainer: {
+    backgroundColor: '#FFF',
+    paddingHorizontal: 10,
+  },
+  cut: {
+    position: 'absolute',
+    width: 28,
+    height: 4,
+    backgroundColor: '#FFF',
+    top: '50%',
+    transform: [{ translateY: -2 }],
+    left: 0,
+    zIndex: 1,
   },
 });
