@@ -13,36 +13,14 @@ const SunIcon = ({ size = 200, color = '#000' }) => (
 );
 
 const CloudIcon = ({ size = 200, color = '#000' }) => {
-  const strokeWidth = 10;
   return (
     <Svg width={size} height={size} viewBox="0 0 120 120">
       <Path
-        d="M25 65 A25 25 0 0 1 55 40"
+        d="M 20 65 A 28 28 0 1 1 85 65 M 35 75 A 28 28 0 1 0 100 75"
         fill="none"
         stroke={color}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-      />
-      <Path
-        d="M55 40 A20 20 0 0 1 85 55"
-        fill="none"
-        stroke={color}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-      />
-      <Path
-        d="M25 65 A25 25 0 0 0 55 90"
-        fill="none"
-        stroke={color}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-      />
-      <Path
-        d="M55 90 A20 20 0 0 0 85 75"
-        fill="none"
-        stroke={color}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
+        strokeWidth={15}
+        strokeLinecap="butt"
       />
     </Svg>
   );
@@ -142,12 +120,15 @@ export default function Home() {
       <View style={styles.bottomSection}>
         {}
         <View style={styles.tempRow}>
-          <Text style={styles.tempSmall}>{current.temp - 4}°</Text>
-          <Text style={styles.tempSmall}>{current.temp - 2}°</Text>
-          {}
-          <Text style={styles.tempMain}>{current.temp}°</Text>
-          <Text style={styles.tempSmall}>{current.temp + 2}°</Text>
-          <Text style={styles.tempSmall}>{current.temp + 1}°</Text>
+          <Text style={[styles.tempSmall, { marginRight: 40 }]}>{current.temp - 4}°</Text>
+
+          <Text style={[styles.tempSmall, { marginRight: 30 }]}>{current.temp - 2}°</Text>
+
+          <Text style={[styles.tempMain, { marginHorizontal: 0 }]}>{current.temp}°</Text>
+
+          <Text style={[styles.tempSmall, { marginLeft: 30 }]}>{current.temp + 2}°</Text>
+
+          <Text style={[styles.tempSmall, { marginLeft: 40 }]}>{current.temp + 1}°</Text>
         </View>
 
         {}
@@ -155,18 +136,22 @@ export default function Home() {
           <View style={styles.lineBackground} />
 
           {}
-          <View style={[styles.cut, { left: '10%' }]} />
+          <View style={[styles.cut, { right: '0%' }]} />
           <View style={[styles.cut, { left: '0%' }]} />
-          <View style={[styles.cut, { left: '70%' }]} />
+          <View style={[styles.cut, { left: '0%' }]} />
           <View style={[styles.cut, { left: '0%' }]} />
 
           <View style={styles.timeRow}>
             <Text style={styles.timeText}>12</Text>
-            <Text style={styles.timeText}>15</Text>
+            <View style={styles.numberContainer}>
+              <Text style={styles.timeText}>15</Text>
+            </View>
             <View style={styles.nowContainer}>
               <Text style={styles.nowLabel}>NOW</Text>
             </View>
-            <Text style={styles.timeText}>21</Text>
+            <View style={styles.numberContainer}>
+              <Text style={styles.timeText}>21</Text>
+            </View>
             <Text style={styles.timeText}>24</Text>
           </View>
         </View>
@@ -236,11 +221,9 @@ const styles = StyleSheet.create({
   tempRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    justifyContent: 'space-between',
     width: '100%',
-    paddingHorizontal: 5,
+    justifyContent: 'center',
     marginBottom: 10,
-    zIndex: 2,
   },
   tempMain: {
     fontSize: 72,
@@ -251,7 +234,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '500',
     color: '#000000',
-    opacity: 50,
+    opacity: 1,
   },
   timelineContainer: {
     flexDirection: 'row',
@@ -275,7 +258,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     width: '100%',
-    gap: 40,
+    gap: 56,
     zIndex: 2,
   },
   timeText: {
@@ -298,7 +281,7 @@ const styles = StyleSheet.create({
   lineBackground: {
     position: 'absolute',
     width: '100%',
-    height: 1.5,
+    height: 2,
     backgroundColor: '#CFCFCF',
   },
   nowContainer: {
@@ -307,7 +290,7 @@ const styles = StyleSheet.create({
   },
   cut: {
     position: 'absolute',
-    width: 28,
+    width: 7,
     height: 4,
     backgroundColor: '#FFF',
     top: '50%',
@@ -315,4 +298,15 @@ const styles = StyleSheet.create({
     left: 0,
     zIndex: 1,
   },
+  numberContainer: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 6,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tempLeftFar: { marginRight: 25 },
+  tempLeftNear: { marginRight: 10 },
+  tempRightNear: { marginLeft: 10 },
+  tempRightFar: { marginLeft: 25 },
 });
