@@ -143,6 +143,7 @@ export default function Home() {
         t06: getTempByHour(tomorrowList, '06'),
         t12: getTempByHour(tomorrowList, '12'),
         t18: getTempByHour(tomorrowList, '18'),
+        t24: getTempByHour(tomorrowList, '24'),
       };
 
       let tomorrowData: any = null;
@@ -161,15 +162,47 @@ export default function Home() {
         }, null);
       }
 
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      let pastWeather = { temp: 0, humidity: 0, pressure: 0, wind: 0, icon: 'cloud' };
+
+      try {
+        const pastRes = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${API_CONFIG.LAT}&longitude=${API_CONFIG.LON}&past_days=1&hourly=temperature_2m,relative_humidity_2m,surface_pressure,wind_speed_10m,weather_code`
+        );
+
+        if (pastRes.ok) {
+          const pastData = await pastRes.json();
+
+          const targetTime = `${yesterdayStr}T12:00`;
+          const timeIndex = pastData.hourly.time.findIndex((t: string) => t === targetTime);
+
+          if (timeIndex !== -1) {
+            pastWeather.temp = Math.round(pastData.hourly.temperature_2m[timeIndex]);
+            pastWeather.humidity = Math.round(pastData.hourly.relative_humidity_2m[timeIndex]);
+            pastWeather.pressure = Math.round(pastData.hourly.surface_pressure[timeIndex]);
+            pastWeather.wind = Math.round(pastData.hourly.wind_speed_10m[timeIndex]);
+
+            const wmoCode = pastData.hourly.weather_code[timeIndex];
+            if (wmoCode <= 1)
+              pastWeather.icon = 'sun';
+            else if (wmoCode <= 3)
+              pastWeather.icon = 'cloud';
+            else pastWeather.icon = 'rain';
+          }
+        }
+      } catch (error) {
+        console.log('Error obteniendo datos históricos de Open-Meteo', error);
+      }
+
       const updatedWeather = [
         {
           id: 'ayer',
           date: formatDate(yesterday),
-          temp: Math.round(currentData.main.temp - 2),
-          humidity: currentData.main?.humidity || 0,
-          pressure: currentData.main?.pressure || 0,
-          wind: currentData.wind?.speed || 0,
-          icon: 'cloud',
+          temp: pastWeather.temp,
+          humidity: pastWeather.humidity,
+          pressure: pastWeather.pressure,
+          wind: pastWeather.wind,
+          icon: pastWeather.icon,
         },
         {
           id: 'hoy',
