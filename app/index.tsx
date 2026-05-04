@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 import Svg, { Rect, Circle, Path } from 'react-native-svg';
 import WeatherDetails from '@/components/ui/weather_details';
 
-// --- VARIABLES DE CONFIGURACIÓN ---
+
 const API_CONFIG = {
   KEY: 'ab297713b62b8c93e8a26c1815a6c18a',
   LAT: '-34.6037',
@@ -18,14 +18,13 @@ const API_CONFIG = {
   UNITS: 'metric',
 };
 
-const formatDate = (date: any) => {
-  return date.toLocaleDateString('es-AR', {
-    day: '2-digit',
-    month: '2-digit',
-  });
+const formatDate = (date: Date) => {
+  const month = (date.getMonth() + 1).toString().padStart(2);
+  const day = date.getDate().toString().padStart(2);
+  return `${month}/${day}`;
 };
 
-// --- COMPONENTES DE ICONOS ---
+
 const SunIcon = ({ size = 200, color = '#000' }) => (
   <Svg width={size} height={size} viewBox="0 0 100 100">
     <Circle cx="50" cy="50" r="38" stroke={color} strokeWidth="10" fill="none" />
