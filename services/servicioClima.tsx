@@ -1,19 +1,19 @@
 import { WeatherDay, WeatherIcon } from '../types/clima';
 
 const API_CONFIG = {
-  KEY: 'ab297713b62b8c93e8a26c1815a6c18a',
+  KEY: process.env.EXPO_PUBLIC_API_KEY,
   LAT: '-34.6037',
   LON: '-58.3816',
   UNITS: 'metric',
 };
 
-const formatDate = (date: Date) => {
+export const formatDate = (date: Date) => {
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
   return `${month}/${day}`;
 };
 
-const getDominantIcon = (
+export const getDominantIcon = (
   points: { windSpeed: number; isRain: boolean; isCloud: boolean; isSun: boolean }[]
 ) => {
   if (!points || points.length === 0) return 'cloud';

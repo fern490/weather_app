@@ -12,18 +12,7 @@ import WeatherDetails from '@/components/ui/weather_details';
 import { WeatherDay } from '../types/clima';
 import { fetchWeatherData } from '../services/servicioClima';
 
-const API_CONFIG = {
-  KEY: 'ab297713b62b8c93e8a26c1815a6c18a',
-  LAT: '-34.6037',
-  LON: '-58.3816',
-  UNITS: 'metric',
-};
 
-const formatDate = (date: Date) => {
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  return `${month}/${day}`;
-};
 
 const SunIcon = ({ size = 200, color = '#000' }) => (
   <Svg width={size} height={size} viewBox="0 0 100 100">
@@ -150,24 +139,7 @@ const WindIcon = ({ size = 200, color = '#000' }) => (
   </Svg>
 );
 
-const getDominantIcon = (
-  points: { windSpeed: number; isRain: boolean; isCloud: boolean; isSun: boolean }[]
-) => {
-  if (!points || points.length === 0) return 'cloud';
 
-  const counts = { sun: 0, cloud: 0, rain: 0, wind: 0 };
-
-  points.forEach((p) => {
-    if (p.windSpeed > 8) counts.wind++;
-    else if (p.isRain) counts.rain++;
-    else if (p.isCloud) counts.cloud++;
-    else counts.sun++;
-  });
-
-  return Object.keys(counts).reduce((a, b) =>
-    counts[a as keyof typeof counts] > counts[b as keyof typeof counts] ? a : b
-  );
-};
 
 export default function Home() {
   const [dayIndex, setDayIndex] = useState(0);
@@ -175,7 +147,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const icon_size = 250;
+  const icon_size = 300;
 
   const fetchWeather = async () => {
     try {
@@ -293,16 +265,16 @@ export default function Home() {
                 {current.temps?.t00 ?? (current.temp != null ? current.temp - 4 : '--')}°
               </Text>
               <Text style={[styles.tempSmall, { marginRight: 30 }]}>
-                {current.temps?.t00 ?? (current.temp != null ? current.temp - 4 : '--')}°
+                {current.temps?.t00 ?? (current.temp != null ? current.temp - 2 : '--')}°
               </Text>
               <Text style={[styles.tempMain, { marginHorizontal: 0 }]} testID="main-temperature">
                 {current.temp ?? '--'}°
               </Text>
               <Text style={[styles.tempSmall, { marginLeft: 30 }]}>
-                {current.temps?.t00 ?? (current.temp != null ? current.temp - 4 : '--')}°
+                {current.temps?.t00 ?? (current.temp != null ? current.temp - 2 : '--')}°
               </Text>
               <Text style={[styles.tempSmall, { marginLeft: 40 }]}>
-                {current.temps?.t00 ?? (current.temp != null ? current.temp - 4 : '--')}°
+                {current.temps?.t00 ?? (current.temp != null ? current.temp - 1 : '--')}°
               </Text>
             </>
           )}
@@ -394,7 +366,7 @@ const styles = StyleSheet.create({
     marginTop: -106,
   },
   iconWrapper: {
-    height: 220,
+    height: 250,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
