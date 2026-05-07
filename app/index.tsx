@@ -5,6 +5,8 @@ import {
   Text,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
+  RefreshControl,
 } from 'react-native';
 import { useState } from 'react';
 import WeatherDetails from '@/components/ui/weather_details';
@@ -12,13 +14,11 @@ import { useWeather } from '@/hooks/useWeather';
 import { SunIcon, CloudIcon, RainIcon, WindIcon } from '@/components/icons/climaIconos';
 
 export default function Home() {
-  const { weatherData, isLoading, error } = useWeather();
-  const [dayIndex, setDayIndex] = useState(0);
+  const { weatherData, city, isLoading, isRefreshing, error, refresh } = useWeather();
+  const [dayIndex, setDayIndex] = useState(1);
 
   const icon_size = 300;
   const current = weatherData?.[dayIndex];
-
-  const getTemp = (v?: number | null, fallback?: number | null) => v ?? fallback ?? '--';
 
   if (isLoading || weatherData.length === 0) {
     return (
@@ -63,121 +63,63 @@ export default function Home() {
 
   return (
     <SafeAreaView style={styles.mainContainer} testID="home-screen">
-      <View style={styles.headerSection}>
-        <View style={styles.dateSelector}>
-          {weatherData.map((data, index) => (
-            <TouchableOpacity
-              key={data.id}
-              onPress={() => setDayIndex(index)}
-              testID={`tab-day-${data.id}`}>
-              <Text style={dayIndex === index ? styles.dateActive : styles.dateInactive}>
-                {data.date}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={refresh} />}>
+        <View style={styles.contentWrapper}>
+          <View style={styles.headerSection}>
+            <View style={styles.dateSelector}>
+              {weatherData.map((data, index) => (
+                <TouchableOpacity key={data.id} onPress={() => setDayIndex(index)}>
+                  <Text style={dayIndex === index ? styles.dateActive : styles.dateInactive}>
+                    {data.date}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
 
-        <Text style={styles.cityTitle}>BUENOS AIRES</Text>
-      </View>
+            {}
+            <Text style={styles.cityTitle}>{city.toUpperCase()}</Text>
+          </View>
 
-      <View style={styles.middleSection}>
-        <View style={styles.iconWrapper} testID={`weather-icon-${current.icon}`}>
-          {renderIcon(current.icon)}
-        </View>
+          <View style={styles.middleSection}>
+            <View style={styles.iconWrapper}>{renderIcon(current?.icon)}</View>
+            <View style={styles.detailsWrapper}>
+              <WeatherDetails
+                humidity={current?.humidity}
+                pressure={current?.pressure}
+                wind={current?.wind}
+              />
+            </View>
+          </View>
 
-        <View style={styles.detailsWrapper}>
-          <WeatherDetails
-            humidity={current.humidity}
-            pressure={current.pressure}
-            wind={current.wind}
-          />
-        </View>
-      </View>
+          <View style={styles.bottomSection}>
+            <View style={styles.tempRow}>
+              <Text style={styles.tempMain}>{current?.temp ?? '--'}°</Text>
+            </View>
 
-      <View style={styles.bottomSection}>
-        <View style={styles.tempRow}>
-          {current.id === 'manana' ? (
-            <>
-              <Text style={[styles.tempSmall, { marginRight: 40 }]}>
-                {current.temps?.t00 ?? '--'}°
-              </Text>
-              <Text style={[styles.tempSmall, { marginRight: 30 }]}>
-                {current.temps?.t06 ?? '--'}°
-              </Text>
-              <Text style={styles.tempMain}>{current.temps?.t12 ?? '--'}°</Text>
-              <Text style={[styles.tempSmall, { marginLeft: 30 }]}>
-                {current.temps?.t18 ?? '--'}°
-              </Text>
-              <Text style={[styles.tempSmall, { marginLeft: 40 }]}>
-                {current.temps?.t24 ?? '--'}°
-              </Text>
-            </>
-          ) : (
-            <>
-              <Text style={[styles.tempSmall, { marginRight: 40 }]}>
-                {getTemp(current.temps?.t00, current.temp ? current.temp - 4 : null)}°
-              </Text>
-              <Text style={[styles.tempSmall, { marginRight: 30 }]}>
-                {getTemp(current.temps?.t00, current.temp ? current.temp - 2 : null)}°
-              </Text>
-              <Text style={styles.tempMain}>{current.temp ?? '--'}°</Text>
-              <Text style={[styles.tempSmall, { marginLeft: 30 }]}>
-                {getTemp(current.temps?.t00, current.temp ? current.temp - 2 : null)}°
-              </Text>
-              <Text style={[styles.tempSmall, { marginLeft: 40 }]}>
-                {getTemp(current.temps?.t00, current.temp ? current.temp - 1 : null)}°
-              </Text>
-            </>
-          )}
-        </View>
+            <View style={styles.minMaxContainer}>
+              <Text style={styles.minMaxText}>Min {current?.min ?? '--'}°</Text>
+              <Text style={styles.minMaxText}>Max {current?.max ?? '--'}°</Text>
+            </View>
 
-        <View style={styles.timelineWrapper}>
-          <View style={styles.lineBackground} />
-
-          <View style={[styles.cut, { left: 0 }]} />
-          <View style={[styles.cut, { right: 0, left: 'auto' }]} />
-
-          <View style={styles.timeRow}>
-            {current.id === 'manana' ? (
-              <>
-                <Text style={styles.timeText}>00</Text>
-
-                <View style={styles.numberContainer}>
-                  <Text style={styles.timeText}>06</Text>
-                </View>
-
-                <View style={styles.nowContainer}>
-                  <Text style={styles.nowLabel}>12</Text>
-                </View>
-
-                <View style={styles.numberContainer}>
-                  <Text style={styles.timeText}>18</Text>
-                </View>
-
-                <Text style={styles.timeText}>24</Text>
-              </>
-            ) : (
-              <>
-                <Text style={styles.timeText}>12</Text>
-
-                <View style={styles.numberContainer}>
-                  <Text style={styles.timeText}>15</Text>
-                </View>
-
-                <View style={styles.nowContainer}>
-                  <Text style={styles.nowLabel}>NOW</Text>
-                </View>
-
-                <View style={styles.numberContainer}>
-                  <Text style={styles.timeText}>21</Text>
-                </View>
-
-                <Text style={styles.timeText}>24</Text>
-              </>
-            )}
+            <View style={styles.timelineWrapper}>
+              <View style={styles.lineBackground} />
+              <View style={[styles.cut, { left: 0 }]} />
+              <View style={[styles.cut, { right: 0, left: 'auto' }]} />
+              <View style={styles.timeRow}>
+                {current?.id === 'manana' ? (
+                  <Text style={styles.timeText}></Text>
+                ) : (
+                  <View style={styles.nowContainer}>
+                    <Text style={styles.nowLabel}>NOW</Text>
+                  </View>
+                )}
+              </View>
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -245,14 +187,14 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
     width: '100%',
     justifyContent: 'center',
-    marginBottom: 10,
+    marginTop: 60,
     gap: 4.5,
   },
   tempMain: {
     fontSize: 72,
     fontWeight: 'bold',
     color: '#000',
-      transform: [{ translateX: 9 }],
+    transform: [{ translateX: 9 }],
   },
   tempSmall: {
     fontSize: 22,
@@ -304,16 +246,37 @@ const styles = StyleSheet.create({
   timeRow: {
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
     width: '100%',
-    gap: 56,
     zIndex: 2,
   },
+
   timeText: {
     fontSize: 14,
     color: '#AAA',
   },
+
   tempTimelineBlock: {
     alignItems: 'center',
     width: '100%',
+  },
+
+  minMaxContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 10,
+    marginTop: 10,
+  },
+
+  minMaxText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#444',
+  },
+  contentWrapper: {
+    flex: 1,
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
   },
 });

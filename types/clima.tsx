@@ -12,6 +12,8 @@ export type WeatherDay = {
   id: 'ayer' | 'hoy' | 'manana';
   date: string;
   temp: number | null;
+  min: number | null;
+  max: number | null;
   humidity: number;
   pressure: number;
   wind: number;
